@@ -9,7 +9,7 @@ const postEntry = async (req, res) => {
   }
   try {
     const result = await handleNewEntry(req.body);
-    res.status(201).json({ message: result });
+    res.status(201).json({ message: "Successfully created", data: result });
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -35,9 +35,14 @@ const handleNewEntry = async (entry) => {
       ],
       function (error) {
         if (error) reject(error);
-        console.log(this);
-        console.log(`Inserted a row with the id: ${this.lastID}`);
-        resolve`Inserted a row with the id: ${this.lastID}`;
+        db.get(
+          `SELECT * FROM timesheet WHERE id = ${this.lastID}`,
+          function (error, row) {
+            if (error) reject(error);
+            console.log(`Inserted a row with the id: ${this.lastID}`);
+            resolve(row);
+          }
+        );
       }
     );
   });
@@ -49,7 +54,10 @@ const getAllEntries = (req, res) => {
     if (err) {
       res.status(500).json({ error: err.message });
     } else {
-      res.json({ data: rows });
+      res.status(200).json({
+        results: rows.length,
+        data: rows,
+      });
     }
   });
 };
