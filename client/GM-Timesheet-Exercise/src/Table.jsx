@@ -3,11 +3,19 @@ import PropTypes from "prop-types";
 
 function Table({data}) {
   const [tableData, setTableData] = useState([])
+  const [totalHours, setTotalHours] = useState(0)
+  const [totalBillableAmount, setTotalBillableAmount] = useState(0)
+  const currency = new Intl.NumberFormat('en-US', {
+    style: "currency",
+    currency: "USD"
+  })
 
+  //Manipulate original data to consolidate timesheet objects with the same project codes
   const createNewData = () => {
+    let consolidatedHours = 0
     if (data !== undefined)  { 
       const newDataArray = data.map(d => { 
-        console.log(d.billable_rate)
+        consolidatedHours += d.hours
         return { 
           billable: d.billable,
           billableRate: d.billable_rate,
@@ -18,6 +26,8 @@ function Table({data}) {
           projectCode: d.project_code
         }
       })
+
+      setTotalHours(consolidatedHours)
 
       const consolidatedData = newDataArray.reduce((accumulator, currentObj) => {
         if (accumulator !== undefined) { 
@@ -42,6 +52,7 @@ function Table({data}) {
     }
   }
 
+  //Set Table Data only after the data has been set
   useEffect(() => {
     try { 
       setTableData(createNewData())
@@ -50,34 +61,73 @@ function Table({data}) {
     }
   }, [data])
 
+  //Helper function to round data
+  const roundNumber = (num) => { 
+    return (Math.round(num * 100) / 100)
+  }
+
+  //Render the rows with the timesheet data
+  const renderRows = () => { 
+    return tableData.map((val, key) => {
+      let percentage = roundNumber((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100)
+      let billableAmount = roundNumber(val.billableHours * val.billableRate)
+      return (
+        <tbody key={key} className="timesheet-row">
+          <tr>
+            <td id="project-name" className="right-aligned">{val.project}</td>
+            <td id="client-name" className="right-aligned">{val.client}</td>
+            <td id="total-hours" className="left-aligned">{roundNumber(val.billableHours + val.nonBillableHours)}</td>
+            <td id ="billable-hours" className="left-aligned">{val.billableHours === 0 ? "0.0" : roundNumber(val.billableHours)}  <span>({percentage}%)</span></td>
+            <td id ="billable-amount" className="left-aligned">{val.billableHours === 0 ? "-" : currency.format(billableAmount)}</td>
+          </tr>
+        </tbody>
+      )
+    })
+  }
+
+  const calculateTotalBillableAmount = () => {
+    let total = 0;
+    if (tableData) { 
+      tableData.forEach(val => {
+        let billableAmount = roundNumber(val.billableHours * val.billableRate)
+        total += billableAmount;
+      })
+      setTotalBillableAmount(total)
+    }
+  }
+  
+  useEffect(() => {
+    try { 
+      calculateTotalBillableAmount()
+    } catch (error) { 
+      console.log(error)
+    }
+
+  }, [tableData])
+
   return (
     <div>
+      <div id ="summary-div">
+        <div className="summary-holder-div">
+          <div className="summary-title-div">Hours Tracked</div>
+          <div className="summary-amount-div">{roundNumber(totalHours).toLocaleString("en-US")}</div>
+        </div>
+        <div className="summary-holder-div">
+          <div className="summary-title-div">Billable Amount</div>
+          <div className="summary-amount-div">{currency.format(totalBillableAmount)}</div>
+        </div>
+      </div>
       <table>
-        <tr>
-          <th>Name</th>
-          <th>Client</th>
-          <th>Hours</th>
-          <th>Billable Hours</th>
-          <th>Billable Amount</th>
-        </tr>
-        {tableData ? tableData.map((val, key) => {
-          console.log(val)
-          let percentage = Math.round(((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100) * 100) / 100
-          let billableAmount = Math.round((val.billableHours * val.billableRate) * 100) / 100
-          let currency = new Intl.NumberFormat('en-US', {
-            style: "currency",
-            currency: "USD"
-          })
-          return (
-            <tr key={key}>
-              <td>{val.project}</td>
-              <td>{val.client}</td>
-              <td>{Math.round((val.billableHours + val.nonBillableHours) * 100) / 100}</td>
-              <td>{Math.round(val.billableHours * 100) / 100} {percentage}%</td>
-              <td>{val.billableHours === 0 ? "-" : currency.format(billableAmount)}</td>
-            </tr>
-          )
-        }) : console.log('Data not set')}
+        <thead className="timesheet-header">
+          <tr>
+            <th className="right-aligned">Name</th>
+            <th className="right-aligned">Client</th>
+            <th className="left-aligned">Hours</th>
+            <th className="left-aligned">Billable Hours</th>
+            <th className="left-aligned">Billable Amount</th>
+          </tr>
+        </thead>
+        {tableData ? renderRows() : console.log('DO SOMETHING HERE!')}
       </table>
     </div>
   )
