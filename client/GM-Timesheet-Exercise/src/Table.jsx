@@ -13,10 +13,10 @@ function Table({data}) {
   //Manipulate original data to consolidate timesheet objects with the same project codes
   const createNewData = () => {
     let consolidatedHours = 0
-    if (data !== undefined)  { 
+    if (data !== undefined) { 
       const newDataArray = data.map(d => { 
         consolidatedHours += d.hours
-        return { 
+        return {
           billable: d.billable,
           billableRate: d.billable_rate,
           client: d.client,
@@ -24,10 +24,10 @@ function Table({data}) {
           nonBillableHours: d.billable.toUpperCase() === "NO" ? d.hours : 0,
           project: d.project,
           projectCode: d.project_code
-        }
-      })
+        };
+      });
 
-      setTotalHours(consolidatedHours)
+      setTotalHours(consolidatedHours);
 
       const consolidatedData = newDataArray.reduce((accumulator, currentObj) => {
         if (accumulator !== undefined) { 
@@ -57,7 +57,7 @@ function Table({data}) {
     try { 
       setTableData(createNewData())
     } catch (error) { 
-      throw error
+      console.log(error)
     }
   }, [data])
 
@@ -68,21 +68,23 @@ function Table({data}) {
 
   //Render the rows with the timesheet data
   const renderRows = () => { 
-    return tableData.map((val, key) => {
-      let percentage = roundNumber((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100)
-      let billableAmount = roundNumber(val.billableHours * val.billableRate)
-      return (
-        <tbody key={key} className="timesheet-row">
-          <tr>
-            <td id="project-name" className="right-aligned">{val.project}</td>
-            <td id="client-name" className="right-aligned">{val.client}</td>
-            <td id="total-hours" className="left-aligned">{roundNumber(val.billableHours + val.nonBillableHours)}</td>
-            <td id ="billable-hours" className="left-aligned">{val.billableHours === 0 ? "0.0" : roundNumber(val.billableHours)}  <span>({percentage}%)</span></td>
-            <td id ="billable-amount" className="left-aligned">{val.billableHours === 0 ? "-" : currency.format(billableAmount)}</td>
-          </tr>
-        </tbody>
-      )
-    })
+    if (tableData !== undefined) {
+      return tableData.map((val, key) => {
+        let percentage = roundNumber((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100)
+        let billableAmount = roundNumber(val.billableHours * val.billableRate)
+        return (
+          <tbody key={key} className="timesheet-row">
+            <tr>
+              <td id="project-name" className="right-aligned">{val.project}</td>
+              <td id="client-name" className="right-aligned">{val.client}</td>
+              <td id="total-hours" className="left-aligned">{roundNumber(val.billableHours + val.nonBillableHours)}</td>
+              <td id ="billable-hours" className="left-aligned">{val.billableHours === 0 ? "0.0" : roundNumber(val.billableHours)}  <span>({percentage}%)</span></td>
+              <td id ="billable-amount" className="left-aligned">{val.billableHours === 0 ? "-" : currency.format(billableAmount)}</td>
+            </tr>
+          </tbody>
+        )
+      })
+    }
   }
 
   const calculateTotalBillableAmount = () => {
@@ -102,8 +104,8 @@ function Table({data}) {
     } catch (error) { 
       console.log(error)
     }
-
   }, [tableData])
+
 
   return (
     <div>
@@ -127,7 +129,7 @@ function Table({data}) {
             <th className="left-aligned">Billable Amount</th>
           </tr>
         </thead>
-        {tableData ? renderRows() : console.log('DO SOMETHING HERE!')}
+        {renderRows()}
       </table>
     </div>
   )

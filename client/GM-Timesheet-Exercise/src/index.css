@@ -23,6 +23,12 @@ body {
   min-height: 100vh;
 }
 
+#loading-div {
+  font-size: 50px;
+  color: #3B5091;
+  font-weight: bolder;
+}
+
 #summary-div {
   display: flex;
   justify-content: space-between;
