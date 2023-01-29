@@ -3,12 +3,15 @@ const sqlite3 = require("sqlite3").verbose();
 const filepath = "./data/timesheet.db";
 
 function connectToDatabase() {
+  // If the file path already exists, create a new database object
   if (fs.existsSync(filepath)) {
     return new sqlite3.Database(filepath);
   } else {
+    //If filepath does not exist, create the table
     const database = new sqlite3.Database(filepath, (error) => {
       if (error) {
-        return console.error(`ERROR IN CONNECTION: ${error.message}`);
+        //Outputs error message to the console, but will not return a value
+        return console.error(`ERROR IN DATABASE CONNECTION: ${error.message}`);
       }
       createTable(database);
       console.log("Connected to the database successfully");
@@ -17,6 +20,7 @@ function connectToDatabase() {
   }
 }
 
+//How to ensure the data is not duplicated? Something to do with the id?
 function createTable(database) {
   database.exec(`
   CREATE TABLE timesheet
@@ -34,5 +38,4 @@ function createTable(database) {
   )
 `);
 }
-
 module.exports = connectToDatabase();

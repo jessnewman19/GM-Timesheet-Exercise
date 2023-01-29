@@ -57,7 +57,7 @@ const handleNewEntry = async (entry) => {
 const getAllEntries = (req, res) => {
   db.all("SELECT * FROM timesheet", (err, rows) => {
     if (err) {
-      res.status(500).send({
+      res.status(500).json({
         message: err.message,
       });
     } else {

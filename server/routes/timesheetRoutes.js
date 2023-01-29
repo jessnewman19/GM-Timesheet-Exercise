@@ -9,4 +9,9 @@ const router = express.Router();
 router.post("/", postEntry);
 router.get("/", getAllEntries);
 
+//When route is not found, execute
+router.all("*", (req, res) => {
+  res.status(404).send("Route not found");
+});
+
 module.exports = router;

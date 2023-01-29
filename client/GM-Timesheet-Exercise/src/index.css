@@ -29,6 +29,13 @@ body {
   font-weight: bolder;
 }
 
+.error-div {
+  font-size: 20px;
+  padding-bottom: 10px;
+  font-weight: bolder;
+  color: #3B5091;
+}
+
 #summary-div {
   display: flex;
   justify-content: space-between;

@@ -12,16 +12,17 @@ function App() {
   useEffect(() => { 
     const fetchData = async () => { 
       try { 
-        const response = await fetch("http://localhost:400/");
+        const response = await fetch("http://localhost:4000/");
         if (response.status === 500) {
           //Will display the error in the console
           throw new Error("Could not retrieve data from the database");
-        } else { 
+        } else {
           const json = await response.json();
           setData(json);
+          setError(null);
         }
       } catch (error) { 
-        setError(error.message)
+        setError("Failed to access data")
     }
   };
   fetchData();
@@ -29,8 +30,7 @@ function App() {
 
   return (
     <div className="App">
-      {error && <p>{error}</p>}
-      {loading ? <Loading setIsLoading={setIsLoading}/> : <Table data={data.data}/>}
+      {loading ? <Loading setIsLoading={setIsLoading}/> : <Table data={data.data} error={error}/>}
     </div>
   )
 }

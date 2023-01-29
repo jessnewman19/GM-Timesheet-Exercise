@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from "prop-types";
 
-function Table({data}) {
+function Table({data, error}) {
   const [tableData, setTableData] = useState([])
   const [totalHours, setTotalHours] = useState(0)
   const [totalBillableAmount, setTotalBillableAmount] = useState(0)
@@ -106,7 +106,6 @@ function Table({data}) {
     }
   }, [tableData])
 
-
   return (
     <div>
       <div id ="summary-div">
@@ -119,6 +118,8 @@ function Table({data}) {
           <div className="summary-amount-div">{currency.format(totalBillableAmount)}</div>
         </div>
       </div>
+      {error && <div className="error-div">{error}</div>}
+      {data.length === 0 && <div className="error-div">No data available</div>}
       <table>
         <thead className="timesheet-header">
           <tr>
@@ -137,6 +138,7 @@ function Table({data}) {
 
 Table.propTypes = { 
   data: PropTypes.array,
+  error: PropTypes.string,
 }
 
 export default Table;
