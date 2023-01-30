@@ -2,6 +2,7 @@
 Timesheet application built using Node.js and React.
 
 ## Installation instructions for MacOS
+Prior to cloning, please ensure you have node and npm installed. See below for a complete list of dependencies.
 
 **Server**
 
