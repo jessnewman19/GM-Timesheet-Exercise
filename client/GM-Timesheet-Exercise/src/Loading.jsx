@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-function Loading({setIsLoading}) {
+function Loading({ setIsLoading }) {
 
-  const loadingFunc = () => { 
-    setTimeout(() => { 
+  const loadingFunc = () => {
+    setTimeout(() => {
       setIsLoading(false)
     }, 1000)
   }
@@ -14,7 +14,7 @@ function Loading({setIsLoading}) {
   )
 }
 
-Loading.propTypes = { 
+Loading.propTypes = {
   setIsLoading: PropTypes.func,
 }
 

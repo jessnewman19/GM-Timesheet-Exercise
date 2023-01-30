@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from "prop-types";
 
-function Table({data, error}) {
+function Table({ data, error }) {
   const [tableData, setTableData] = useState([]);
   const [totalHours, setTotalHours] = useState(0);
   const [totalBillableAmount, setTotalBillableAmount] = useState(0);
@@ -13,8 +13,8 @@ function Table({data, error}) {
   //Create new array of objects from data that will be used in the table. 
   const createNewData = () => {
     let consolidatedHours = 0
-    if (data !== undefined) { 
-      const newDataArray = data.map(d => { 
+    if (data !== undefined) {
+      const newDataArray = data.map(d => {
         consolidatedHours += d.hours
         return {
           billable: d.billable,
@@ -32,7 +32,7 @@ function Table({data, error}) {
 
       //Consolidate objects with the same project code into new array
       const consolidatedData = newDataArray.reduce((accumulator, currentObj) => {
-        if (accumulator !== undefined) { 
+        if (accumulator !== undefined) {
           //If the accumulator already has an object with the same project code, set existing object
           const existingObj = accumulator.find(item => item.projectCode === currentObj.projectCode)
           //will provide the existing object in the accumulator 
@@ -46,7 +46,7 @@ function Table({data, error}) {
               //If the current object has non-billable hours, increment non-billable hours on existing object
               existingObj.nonBillableHours += currentObj.nonBillableHours
             }
-          } else { 
+          } else {
             accumulator.push(currentObj)
           }
           return accumulator
@@ -58,23 +58,23 @@ function Table({data, error}) {
 
   //Set Table Data only after the data has been set
   useEffect(() => {
-    try { 
+    try {
       setTableData(createNewData())
-    } catch (error) { 
+    } catch (error) {
       console.log(error)
     }
   }, [data])
 
   //Helper function to round data
-  const roundNumber = (num) => { 
+  const roundNumber = (num) => {
     return (Math.round(num * 100) / 100)
   }
 
   //Render the rows with the timesheet data
-  const renderRows = () => { 
+  const renderRows = () => {
     if (tableData !== undefined) {
       //Sort data by project name
-      tableData.sort((a,b) => {
+      tableData.sort((a, b) => {
         if (a.project < b.project) return -1;
         if (a.project > b.project) return 1;
         return 0;
@@ -87,8 +87,8 @@ function Table({data, error}) {
               <td id="project-name" className="left-aligned">{val.project}</td>
               <td id="client-name" className="left-aligned">{val.client}</td>
               <td id="total-hours" className="right-aligned">{roundNumber(val.billableHours + val.nonBillableHours)}</td>
-              <td id ="billable-hours" className="right-aligned">{val.billableHours === 0 ? "0.0" : roundNumber(val.billableHours)}  <span>({percentage}%)</span></td>
-              <td id ="billable-amount" className="right-aligned">{val.billableAmount === 0 ? "-" : currency.format(val.billableAmount)}</td>
+              <td id="billable-hours" className="right-aligned">{val.billableHours === 0 ? "0.0" : roundNumber(val.billableHours)}  <span>({percentage}%)</span></td>
+              <td id="billable-amount" className="right-aligned">{val.billableAmount === 0 ? "-" : currency.format(val.billableAmount)}</td>
             </tr>
           </tbody>
         )
@@ -99,26 +99,26 @@ function Table({data, error}) {
   //Calculate the total billable amount
   const calculateTotalBillableAmount = () => {
     let total = 0;
-    if (tableData) { 
+    if (tableData) {
       tableData.forEach(val => {
         total += val.billableAmount;
       })
       setTotalBillableAmount(total)
     }
   }
-  
+
   //Calculate the total billable amount when the table data is set
   useEffect(() => {
-    try { 
+    try {
       calculateTotalBillableAmount()
-    } catch (error) { 
+    } catch (error) {
       console.log(error)
     }
   }, [tableData])
 
   return (
     <div>
-      <div id ="summary-div">
+      <div id="summary-div">
         <div className="summary-holder-div">
           <div className="summary-title-div">Hours Tracked</div>
           <div className="summary-amount-div">{roundNumber(totalHours).toLocaleString("en-US")}</div>
@@ -146,7 +146,7 @@ function Table({data, error}) {
   )
 }
 
-Table.propTypes = { 
+Table.propTypes = {
   data: PropTypes.array,
   error: PropTypes.string,
 }

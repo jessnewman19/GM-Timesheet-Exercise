@@ -5,13 +5,13 @@ import './App.css';
 
 function App() {
   const [data, setData] = useState([]);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
   const [loading, setIsLoading] = useState(true);
 
   //Fetch data on initial render 
-  useEffect(() => { 
-    const fetchData = async () => { 
-      try { 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         const response = await fetch("http://localhost:4000/");
         if (response.status === 500) {
           //Will display the error in the console
@@ -21,16 +21,16 @@ function App() {
           setData(json);
           setError(null);
         }
-      } catch (error) { 
+      } catch (error) {
         setError("Failed to access data")
-    }
-  };
-  fetchData();
-  },[]);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="App">
-      {loading ? <Loading setIsLoading={setIsLoading}/> : <Table data={data.data} error={error}/>}
+      {loading ? <Loading setIsLoading={setIsLoading} /> : <Table data={data.data} error={error} />}
     </div>
   )
 }
