@@ -21,8 +21,8 @@ function App() {
           setData(json);
           setError(null);
         }
-      } catch (error) {
-        setError("Failed to access data")
+      } catch (err) {
+        setError("Failed to access server")
       }
     };
     fetchData();

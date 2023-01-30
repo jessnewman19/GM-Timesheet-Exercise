@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from "prop-types";
 
-function Table({ data, error, setError }) {
+function Table({ data, error }) {
   const [tableData, setTableData] = useState([]);
   const [totalHours, setTotalHours] = useState(0);
   const [totalBillableAmount, setTotalBillableAmount] = useState(0);
@@ -12,7 +12,7 @@ function Table({ data, error, setError }) {
 
   //Create new array of objects from data that will be used in the table. 
   const createNewData = () => {
-    let consolidatedHours = 0
+    let consolidatedHours = 0;
     if (data !== undefined) {
       const newDataArray = data.map(d => {
         consolidatedHours += d.hours
@@ -47,28 +47,27 @@ function Table({ data, error, setError }) {
               existingObj.nonBillableHours += currentObj.nonBillableHours
             }
           } else {
-            accumulator.push(currentObj)
+            accumulator.push(currentObj);
           }
-          return accumulator
+          return accumulator;
         }
       }, [])
-      setError(null)
-      return consolidatedData
+      return consolidatedData;
     }
   }
 
   //Set Table Data only after the data has been set
   useEffect(() => {
     try {
-      setTableData(createNewData())
-    } catch (error) {
-      setError("Could not gather data")
+      setTableData(createNewData());
+    } catch (err) {
+      console.log(err);
     }
   }, [data])
 
   //Helper function to round data
   const roundNumber = (num) => {
-    return (Math.round(num * 100) / 100)
+    return (Math.round(num * 100) / 100);
   }
 
   //Render the rows with the timesheet data
@@ -82,7 +81,7 @@ function Table({ data, error, setError }) {
       })
       //Display data in the table
       return tableData.map((val, key) => {
-        let percentage = roundNumber((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100)
+        let percentage = roundNumber((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100);
         return (
           <tbody key={key} className="timesheet-row">
             <tr>
@@ -105,17 +104,16 @@ function Table({ data, error, setError }) {
       tableData.forEach(val => {
         total += val.billableAmount;
       })
-      setTotalBillableAmount(total)
+      setTotalBillableAmount(total);
     }
-    setError(null)
   }
 
   //Calculate the total billable amount when the table data is set
   useEffect(() => {
     try {
-      calculateTotalBillableAmount()
-    } catch (error) {
-      setError("Could not calculate billable amount")
+      calculateTotalBillableAmount();
+    } catch (err) {
+      console.log(err);
     }
   }, [tableData])
 
@@ -151,8 +149,7 @@ function Table({ data, error, setError }) {
 
 Table.propTypes = {
   data: PropTypes.array,
-  error: PropTypes.string,
-  setError: PropTypes.func,
+  error: PropTypes.string
 }
 
 export default Table;
