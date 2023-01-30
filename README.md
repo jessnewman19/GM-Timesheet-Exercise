@@ -2,6 +2,7 @@
 Timesheet application built using Node.js and React.
 
 ## Installation instructions for MacOS
+
 **Server**
 
 1. Navigate into server directory 
@@ -43,14 +44,14 @@ npm run dev
 To shut down the application, hit control + c in the terminal.
 
 ## User Stories
-* A user can view a table that displays consolidated information from the timesheet database
+* A user can view a table that displays consolidated information for each project from the timesheet database
 * A user can view the total number of hours tracked and the total billable amount
 
 ## Post New Entry
 * To create a new timesheet entry, utilize Postman to post a new request to http://localhost:4000/.
-* Ensure the Content/Type header is set to application/json and JSON is selected for the body
+* Ensure the Content/Type header is set to application/json and JSON is selected for the body.
 * Submit information for all fields (date, client, project, project_code, hours, billable, first_name, last_name, billable_rate). *A unique ID will automatically generate*
-* When the application is refreshed, the new entry will appear.
+* When the application is refreshed, the new entry will appear in it's own row, assuming the project ID does not match a pre-existing project ID.
 
 ## Server Dependencies 
   * [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
@@ -62,4 +63,4 @@ To shut down the application, hit control + c in the terminal.
  * [Sqlite3](https://github.com/TryGhost/node-sqlite3) (If you have having issues with installing Sqlite3, trying using **npm install --save sqlite3**)
 
  ## Application Dependencies 
- * [Prop-Types]() (If you have having issues installing Prop Types, try using **npm install --save prop-types**)
+ * [Prop-Types](https://github.com/facebook/prop-types) (If you have having issues installing Prop Types, try using **npm install --save prop-types**)

@@ -30,7 +30,7 @@ function App() {
 
   return (
     <div className="App">
-      {loading ? <Loading setIsLoading={setIsLoading} /> : <Table data={data.data} error={error} />}
+      {loading ? <Loading setIsLoading={setIsLoading} /> : <Table data={data.data} error={error} setError={setError} />}
     </div>
   )
 }

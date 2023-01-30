@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from "prop-types";
 
-function Table({ data, error }) {
+function Table({ data, error, setError }) {
   const [tableData, setTableData] = useState([]);
   const [totalHours, setTotalHours] = useState(0);
   const [totalBillableAmount, setTotalBillableAmount] = useState(0);
@@ -52,6 +52,7 @@ function Table({ data, error }) {
           return accumulator
         }
       }, [])
+      setError(null)
       return consolidatedData
     }
   }
@@ -61,7 +62,7 @@ function Table({ data, error }) {
     try {
       setTableData(createNewData())
     } catch (error) {
-      console.log(error)
+      setError("Could not gather data")
     }
   }, [data])
 
@@ -79,6 +80,7 @@ function Table({ data, error }) {
         if (a.project > b.project) return 1;
         return 0;
       })
+      //Display data in the table
       return tableData.map((val, key) => {
         let percentage = roundNumber((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100)
         return (
@@ -105,6 +107,7 @@ function Table({ data, error }) {
       })
       setTotalBillableAmount(total)
     }
+    setError(null)
   }
 
   //Calculate the total billable amount when the table data is set
@@ -112,7 +115,7 @@ function Table({ data, error }) {
     try {
       calculateTotalBillableAmount()
     } catch (error) {
-      console.log(error)
+      setError("Could not calculate billable amount")
     }
   }, [tableData])
 
@@ -149,6 +152,7 @@ function Table({ data, error }) {
 Table.propTypes = {
   data: PropTypes.array,
   error: PropTypes.string,
+  setError: PropTypes.func,
 }
 
 export default Table;

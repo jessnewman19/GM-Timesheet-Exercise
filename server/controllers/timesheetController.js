@@ -33,7 +33,6 @@ const handleNewEntry = async (entry) => {
         entry.last_name,
         entry.billable_rate,
       ],
-      //Need to review these error functions
       function (error) {
         //Passes the error to the catch function above
         if (error) reject(error);
