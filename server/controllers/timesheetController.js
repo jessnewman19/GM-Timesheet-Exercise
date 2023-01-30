@@ -53,7 +53,6 @@ const handleNewEntry = async (entry) => {
   });
 };
 
-//Retrieve all timesheet entries from database
 const getAllEntries = (req, res) => {
   db.all("SELECT * FROM timesheet", (err, rows) => {
     if (err) {

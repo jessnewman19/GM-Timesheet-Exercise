@@ -20,7 +20,9 @@ function connectToDatabase() {
   }
 }
 
-//How to ensure the data is not duplicated? Something to do with the id?
+//When the data in inserted into the database, there is no variable in the csv file to ensure no entries are duplicated
+//To fix this, I would insert a new column in the CSV file for an id variable
+//When creating the table, require the id to be unique. This would prevent duplicate entries from being submitted.
 function createTable(database) {
   database.exec(`
   CREATE TABLE timesheet

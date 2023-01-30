@@ -2,15 +2,15 @@ import React, {useEffect, useState} from 'react';
 import PropTypes from "prop-types";
 
 function Table({data, error}) {
-  const [tableData, setTableData] = useState([])
-  const [totalHours, setTotalHours] = useState(0)
-  const [totalBillableAmount, setTotalBillableAmount] = useState(0)
+  const [tableData, setTableData] = useState([]);
+  const [totalHours, setTotalHours] = useState(0);
+  const [totalBillableAmount, setTotalBillableAmount] = useState(0);
   const currency = new Intl.NumberFormat('en-US', {
     style: "currency",
     currency: "USD"
-  })
+  });
 
-  //Manipulate original data to consolidate timesheet objects with the same project codes
+  //Create new array of objects from data that will be used in the table. 
   const createNewData = () => {
     let consolidatedHours = 0
     if (data !== undefined) { 
@@ -23,23 +23,27 @@ function Table({data, error}) {
           billableHours: d.billable.toUpperCase() === "YES" ? d.hours : 0,
           nonBillableHours: d.billable.toUpperCase() === "NO" ? d.hours : 0,
           project: d.project,
-          projectCode: d.project_code
+          projectCode: d.project_code,
+          billableAmount: d.billable.toUpperCase() === "YES" ? d.hours * d.billable_rate : 0,
         };
       });
 
       setTotalHours(consolidatedHours);
 
+      //Consolidate objects with the same project code into new array
       const consolidatedData = newDataArray.reduce((accumulator, currentObj) => {
         if (accumulator !== undefined) { 
-          //If the accumulator already has an object with the same project code and billable status, set existing object
+          //If the accumulator already has an object with the same project code, set existing object
           const existingObj = accumulator.find(item => item.projectCode === currentObj.projectCode)
-          //will give me the existing object in the accumulator 
+          //will provide the existing object in the accumulator 
           if (existingObj) {
+            //If the current object has billable hours, increment billable hours & billable amount on existing object
             if (currentObj.billable.toUpperCase() === 'YES') {
-              if (existingObj.billableRate === 0) existingObj.billableRate = currentObj.billableRate
+              existingObj.billableAmount += currentObj.billableAmount
               existingObj.billableHours += currentObj.billableHours
             }
             if (currentObj.billable.toUpperCase() === 'NO') {
+              //If the current object has non-billable hours, increment non-billable hours on existing object
               existingObj.nonBillableHours += currentObj.nonBillableHours
             }
           } else { 
@@ -69,17 +73,22 @@ function Table({data, error}) {
   //Render the rows with the timesheet data
   const renderRows = () => { 
     if (tableData !== undefined) {
+      //Sort data by project name
+      tableData.sort((a,b) => {
+        if (a.project < b.project) return -1;
+        if (a.project > b.project) return 1;
+        return 0;
+      })
       return tableData.map((val, key) => {
         let percentage = roundNumber((val.billableHours / (val.billableHours + val.nonBillableHours)) * 100)
-        let billableAmount = roundNumber(val.billableHours * val.billableRate)
         return (
           <tbody key={key} className="timesheet-row">
             <tr>
-              <td id="project-name" className="right-aligned">{val.project}</td>
-              <td id="client-name" className="right-aligned">{val.client}</td>
-              <td id="total-hours" className="left-aligned">{roundNumber(val.billableHours + val.nonBillableHours)}</td>
-              <td id ="billable-hours" className="left-aligned">{val.billableHours === 0 ? "0.0" : roundNumber(val.billableHours)}  <span>({percentage}%)</span></td>
-              <td id ="billable-amount" className="left-aligned">{val.billableHours === 0 ? "-" : currency.format(billableAmount)}</td>
+              <td id="project-name" className="left-aligned">{val.project}</td>
+              <td id="client-name" className="left-aligned">{val.client}</td>
+              <td id="total-hours" className="right-aligned">{roundNumber(val.billableHours + val.nonBillableHours)}</td>
+              <td id ="billable-hours" className="right-aligned">{val.billableHours === 0 ? "0.0" : roundNumber(val.billableHours)}  <span>({percentage}%)</span></td>
+              <td id ="billable-amount" className="right-aligned">{val.billableAmount === 0 ? "-" : currency.format(val.billableAmount)}</td>
             </tr>
           </tbody>
         )
@@ -87,17 +96,18 @@ function Table({data, error}) {
     }
   }
 
+  //Calculate the total billable amount
   const calculateTotalBillableAmount = () => {
     let total = 0;
     if (tableData) { 
       tableData.forEach(val => {
-        let billableAmount = roundNumber(val.billableHours * val.billableRate)
-        total += billableAmount;
+        total += val.billableAmount;
       })
       setTotalBillableAmount(total)
     }
   }
   
+  //Calculate the total billable amount when the table data is set
   useEffect(() => {
     try { 
       calculateTotalBillableAmount()
@@ -119,15 +129,15 @@ function Table({data, error}) {
         </div>
       </div>
       {error && <div className="error-div">{error}</div>}
-      {data.length === 0 && <div className="error-div">No data available</div>}
+      {data === undefined || data.length === 0 && <div className="error-div">No data available</div>}
       <table>
         <thead className="timesheet-header">
           <tr>
-            <th className="right-aligned">Name</th>
-            <th className="right-aligned">Client</th>
-            <th className="left-aligned">Hours</th>
-            <th className="left-aligned">Billable Hours</th>
-            <th className="left-aligned">Billable Amount</th>
+            <th className="left-aligned">Name</th>
+            <th className="left-aligned">Client</th>
+            <th className="right-aligned">Hours</th>
+            <th className="right-aligned">Billable Hours</th>
+            <th className="right-aligned">Billable Amount</th>
           </tr>
         </thead>
         {renderRows()}

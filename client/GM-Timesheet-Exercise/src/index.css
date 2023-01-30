@@ -4,15 +4,7 @@
   line-height: 24px;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+  background-color: white;
 }
 
 body {
@@ -23,12 +15,14 @@ body {
   min-height: 100vh;
 }
 
+/*LOADING COMPONENT*/
 #loading-div {
   font-size: 50px;
   color: #3B5091;
   font-weight: bolder;
 }
 
+/*ERROR MESSAGE*/
 .error-div {
   font-size: 20px;
   padding-bottom: 10px;
@@ -36,10 +30,12 @@ body {
   color: #3B5091;
 }
 
+/*SUMMARY DIV*/
 #summary-div {
   display: flex;
   justify-content: space-between;
   height: 15vh;
+  color: black;
 }
 
 .summary-holder-div {
@@ -63,6 +59,7 @@ body {
   font-weight: 800;
 }
 
+/*TABLE*/
 table {
   border-collapse: collapse;
 }
@@ -74,6 +71,7 @@ table {
   border-color: #C5C5C5;
   padding-right: 20px;
   padding-left: 20px;
+  color: black;
 }
 
 .timesheet-row td {
@@ -83,11 +81,11 @@ table {
   padding: 5px 20px 5px 20px;
 }
 
-.right-aligned {
+.left-aligned {
   text-align: start;
 }
 
-.left-aligned {
+.right-aligned {
   text-align: end;
 }
 
@@ -102,24 +100,4 @@ table {
 #billable-amount {
   font-weight: bolder;
   color: black;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
 }
