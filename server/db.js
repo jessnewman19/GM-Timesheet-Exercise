@@ -3,7 +3,7 @@ const sqlite3 = require("sqlite3").verbose();
 const filepath = "./data/timesheet.db";
 
 function connectToDatabase() {
-  // If the file path already exists, create a new database object
+  // If the file path already exists, create a new database object (instance of the Database class)
   if (fs.existsSync(filepath)) {
     return new sqlite3.Database(filepath);
   } else {

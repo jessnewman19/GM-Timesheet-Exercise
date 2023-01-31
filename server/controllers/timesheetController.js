@@ -53,6 +53,8 @@ const handleNewEntry = async (entry) => {
 };
 
 const getAllEntries = (req, res) => {
+  //Uses db.all method from database module, where db is a database connection instance. 
+  //Takes a SQL query and callback function as arguments
   db.all("SELECT * FROM timesheet", (err, rows) => {
     if (err) {
       res.status(500).json({
