@@ -11,7 +11,6 @@ fs.unlink(dbFile, (error) => {
 // return new Promise((resolve, reject) => {
 //   fs.unlink(dbFile, (error) => {
 //     if (error) {
-//       console.log(error)
 //       reject(error);
 //     } else { 
 //       console.log(`Deleted database file: ${dbFile}`);

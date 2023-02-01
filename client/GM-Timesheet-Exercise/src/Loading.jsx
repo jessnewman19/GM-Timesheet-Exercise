@@ -18,4 +18,4 @@ Loading.propTypes = {
   setIsLoading: PropTypes.func,
 }
 
-export default Loading
+export default Loading;

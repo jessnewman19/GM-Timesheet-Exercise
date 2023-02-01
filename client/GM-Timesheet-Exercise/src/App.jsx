@@ -14,7 +14,7 @@ function App() {
       try {
         const response = await fetch("http://localhost:4000/");
         if (response.status === 500) {
-          //Will display the error in the console
+          //Will display the error in the console. 500 is a generic error code.
           throw new Error("Could not retrieve data from the database");
         } else {
           const json = await response.json();
