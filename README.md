@@ -1,4 +1,4 @@
-# Giant Machines Timesheet Exercise
+# Timesheet Application
 Timesheet application built using Node.js and React.
 
 ## Installation instructions for MacOS
